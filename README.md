@@ -1,1 +1,196 @@
 # san-valentin
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins',sans-serif;
+    height:100vh;
+    overflow:hidden;
+    background:radial-gradient(circle at top,#ff758c,#ff416c 60%,#14000f);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+canvas{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+}
+
+.scene{
+    position:absolute;
+    width:90%;
+    max-width:600px;
+    padding:50px;
+    border-radius:30px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(25px);
+    border:1px solid rgba(255,255,255,0.3);
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    opacity:0;
+    transform:translateY(40px);
+    transition:all 1s ease;
+}
+
+.scene.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+h1{
+    font-family:'Playfair Display',serif;
+    margin-bottom:20px;
+    font-size:2rem;
+}
+
+p{
+    line-height:1.8;
+    margin-bottom:25px;
+}
+
+button{
+    padding:12px 28px;
+    border-radius:50px;
+    border:none;
+    background:linear-gradient(45deg,#ff4b2b,#ff416c);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- ESCENA 1 -->
+<div class="scene active">
+    <h1>Hay momentos…</h1>
+    <p>
+        En los que el tiempo parece detenerse,
+        y solo queda lo que sentimos.
+    </p>
+    <button onclick="next()">Continuar</button>
+</div>
+
+<!-- ESCENA 2 -->
+<div class="scene">
+    <h1>Y personas…</h1>
+    <p>
+        Que transforman lo cotidiano en algo eterno.
+        Que convierten un día común en algo inolvidable.
+    </p>
+    <button onclick="next()">Seguir</button>
+</div>
+
+<!-- ESCENA 3 -->
+<div class="scene">
+    <h1>Porque hay algo diferente…</h1>
+    <p>
+        Cuando lo que sentimos deja de ser un juego
+        y empieza a convertirse en verdad.
+    </p>
+    <button onclick="next()">Continuar</button>
+</div>
+
+<!-- ESCENA 4 -->
+<div class="scene">
+    <h1>Y entonces comprendemos…</h1>
+    <p>
+        Que amar no es prometer perfección,
+        sino decidir quedarse incluso cuando no sabemos qué viene después.
+    </p>
+    <button onclick="next()">Última página</button>
+</div>
+
+<!-- ESCENA 5 FINAL -->
+<div class="scene">
+    <h1>Si decides quedarte</h1>
+    <p>
+        Por primera vez, admitiré que ya no estoy dispuesto a seguir jugando a enamorarme sin entregarme por completo, como si no supiera que ya te he entregado cada fragmento de mí. Quiero poder quererte con toda mi alma, sin preocuparme por lo que venga después.
+    </p>
+</div>
+
+<script>
+
+/* Control de escenas */
+let current = 0;
+const scenes = document.querySelectorAll(".scene");
+
+function next(){
+    scenes[current].classList.remove("active");
+    current++;
+    if(current < scenes.length){
+        scenes[current].classList.add("active");
+    }
+}
+
+/* Partículas */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let hearts=[];
+class Heart{
+    constructor(){
+        this.x=Math.random()*canvas.width;
+        this.y=canvas.height+20;
+        this.size=Math.random()*15+10;
+        this.speed=Math.random()*1.5+0.5;
+        this.opacity=Math.random()*0.5+0.3;
+    }
+    draw(){
+        ctx.globalAlpha=this.opacity;
+        ctx.fillStyle="#ffd1dc";
+        ctx.font=this.size+"px serif";
+        ctx.fillText("❤",this.x,this.y);
+    }
+    update(){
+        this.y-=this.speed;
+        if(this.y<-20){
+            this.y=canvas.height+20;
+            this.x=Math.random()*canvas.width;
+        }
+        this.draw();
+    }
+}
+
+function init(){
+    for(let i=0;i<40;i++){hearts.push(new Heart());}
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    hearts.forEach(h=>h.update());
+    requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+window.addEventListener("resize",()=>{
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+});
+
+</script>
+
+</body>
+</html>
